@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-/*small change*/ 
 
 #define MAX_VACCINES 1000
 #define MAX_VACCINE_NAME 50
