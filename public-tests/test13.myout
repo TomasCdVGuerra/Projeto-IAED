@@ -1,13 +1,7 @@
-Command 'c' received with args: batch=CA12B5, expiry_date=04-08-2025, doses=120, vaccine_name=sarampo
 CA12B5
-Command 'a' received with args: user_name=joão, vaccine_name=sarampo
 CA12B5
-Command 'a' received with args: user_name="João, vaccine_name=Miguel"
 no stock
 invalid command
-Command 'a' received with args: user_name=rampo, vaccine_name=a
 no stock
 invalid command
-Command 'a' received with args: user_name=ria, vaccine_name=sarampos
 no stock
-Command 'l' received with vaccine_name=q

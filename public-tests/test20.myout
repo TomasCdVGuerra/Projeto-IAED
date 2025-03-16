@@ -1,18 +1,9 @@
-Command 'c' received with args: batch=CA12B5, expiry_date=04-08-2025, doses=120, vaccine_name=sarampo
 CA12B5
-Command 'c' received with args: batch=5A8B, expiry_date=08-08-2025, doses=80, vaccine_name=corona_virus
 5A8B
-Command 'c' received with args: batch=A0C0, expiry_date=31-07-2025, doses=210, vaccine_name=papeira
 A0C0
-Command 'a' received with args: user_name=xico, vaccine_name=sarampo
 CA12B5
-Command 'a' received with args: user_name=xico, vaccine_name=papeira
 A0C0
-Command 'a' received with args: user_name=maria, vaccine_name=corona_virus
 5A8B
-Command 'a' received with args: user_name=xico, vaccine_name=sarampo
 already vaccinated
-Command 'u' received with user_name=xico
 xico CA12B5 01-01-2025 sarampo
 xico A0C0 01-01-2025 papeira
-Command 'l' received with vaccine_name=q

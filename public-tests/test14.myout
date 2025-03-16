@@ -1,7 +1,3 @@
-Command 'c' received with args: batch=CA12B5, expiry_date=04-08-2025, doses=120, vaccine_name=sarampo
 CA12B5
-Command 'c' received with args: batch=F5A4, expiry_date=04-5-2025, doses=20, vaccine_name=sarampo
 F5A4
-Command 'a' received with args: user_name=Maria, vaccine_name=sarampo
 F5A4
-Command 'l' received with vaccine_name=q

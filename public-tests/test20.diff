@@ -1,22 +1,6 @@
-1d0
-< Command 'c' received with args: batch=CA12B5, expiry_date=04-08-2025, doses=120, vaccine_name=sarampo
-3d1
-< Command 'c' received with args: batch=5A8B, expiry_date=08-08-2025, doses=80, vaccine_name=corona_virus
-5d2
-< Command 'c' received with args: batch=A0C0, expiry_date=31-07-2025, doses=210, vaccine_name=papeira
-7d3
-< Command 'a' received with args: user_name=xico, vaccine_name=sarampo
-9d4
-< Command 'a' received with args: user_name=xico, vaccine_name=papeira
-11d5
-< Command 'a' received with args: user_name=maria, vaccine_name=corona_virus
-13d6
-< Command 'a' received with args: user_name=xico, vaccine_name=sarampo
-15,18c8,12
-< Command 'u' received with user_name=xico
+8,9c8,12
 < xico CA12B5 01-01-2025 sarampo
 < xico A0C0 01-01-2025 papeira
-< Command 'l' received with vaccine_name=q
 ---
 > xico CA12B5 01-01-2025
 > xico A0C0 01-01-2025

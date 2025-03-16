@@ -1,14 +1,7 @@
-1d0
-< Command 'c' received with args: batch=CA12B5, expiry_date=04-08-2025, doses=120, vaccine_name=sarampo
-3d1
-< Command 'a' received with args: user_name=joão, vaccine_name=sarampo
-5,10c3,7
-< Command 'u' received with user_name=a
+3,5c3,7
 < invalid command
 < invalid command
-< Command 'c' received with args: batch=o, expiry_date=sarampo, doses=120, vaccine_name=a
 < invalid input
-< Command 'u' received with user_name=l
 ---
 > joão CA12B5 01-01-2025
 > CA12B5
