@@ -51,7 +51,7 @@ int is_valid_date(const char *date) {
     if (month == 2) {
         int is_leap = (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
         if (day > (is_leap ? 29 : 28)) return 0;
-    } else if (month == 4, month == 6, month == 9 || month == 11) {
+    } else if (month == 4 || month == 6 || month == 9 || month == 11) {
         if (day > 30) return 0;
     }
     if (compare_dates(date, current_date) < 0) return 0;
