@@ -77,8 +77,16 @@ void add_vaccine_batch(char *batch, char *expiry_date, int doses, char *vaccine_
             return;
         }
     }
-    if (!is_valid_batch_name(batch) || !is_valid_date(expiry_date) || doses <= 0) {
+    if (!is_valid_batch_name(batch)) {
         printf("invalid input\n");
+        return;
+    }
+    else if(!is_valid_date(expiry_date)){
+        printf("invalid date\n");
+        return;
+    }
+    else if(doses <= 0){
+        printf("invalid quantity\n");
         return;
     }
     strcpy(vaccine_batches[vaccine_count].batch, batch);
