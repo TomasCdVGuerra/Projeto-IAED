@@ -48,7 +48,21 @@ int is_valid_date(const char *date) {
     int day, month, year;
     parse_date(date, &day, &month, &year);
     if (year < 2025 || month < 1 || month > 12 || day < 1 || day > 31) return 0;
+    if (month == 2) {
+        int is_leap = (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+        if (day > (is_leap ? 29 : 28)) return 0;
+    } else if (month == 4 || month == 6 || month == 9 || month == 11) {
+        if (day > 30) return 0;
+    }
     if (compare_dates(date, current_date) < 0) return 0;
+    return 1;
+}
+
+int is_valid_batch_name(const char *batch) {
+    if (strlen(batch) > MAX_BATCH_NAME) return 0;
+    for (int i = 0; batch[i] != '\0'; i++) {
+        if (!isalnum(batch[i])) return 0;
+    }
     return 1;
 }
 
@@ -63,7 +77,7 @@ void add_vaccine_batch(char *batch, char *expiry_date, int doses, char *vaccine_
             return;
         }
     }
-    if (strlen(batch) > MAX_BATCH_NAME || !is_valid_date(expiry_date) || doses <= 0) {
+    if (!is_valid_batch_name(batch) || !is_valid_date(expiry_date) || doses <= 0) {
         printf("invalid input\n");
         return;
     }
