@@ -1,18 +1,12 @@
 389c389
-< E94C56D6
+< invalid input
 ---
 > invalid date
 944c944
-< 0513932A
+< invalid input
 ---
 > invalid date
-1000a1001,1002
-> B871E93B
-> 043561B4
-1009,1010c1011,2010
-< too many vaccines
-< too many vaccines
----
+1010a1011,2010
 > U0ujRhaWVA2wf2K6oOxLf4 5C4C466C 01-01-2025 19 0
 > 17TI1wwn4Luusb0pHNmiun 8C3C158A 02-01-2025 79 0
 > Bmw4DVwNpHIpv5ll482KII A229D2B7 02-01-2025 18 0
