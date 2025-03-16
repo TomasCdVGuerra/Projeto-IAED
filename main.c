@@ -51,7 +51,7 @@ int is_valid_date(const char *date) {
     if (month == 2) {
         int is_leap = (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
         if (day > (is_leap ? 29 : 28)) return 0;
-    } else if (month == 4 || month == 6 || month == 9 || month == 11) {
+    } else if (month == 4, month == 6, month == 9 || month == 11) {
         if (day > 30) return 0;
     }
     if (compare_dates(date, current_date) < 0) return 0;
@@ -191,14 +191,17 @@ int main() {
                 char batch[MAX_BATCH_NAME], expiry_date[MAX_DATE], vaccine_name[MAX_VACCINE_NAME];
                 int doses;
                 scanf("%s %s %d %s", batch, expiry_date, &doses, vaccine_name);
+                printf("Command 'c' received with args: batch=%s, expiry_date=%s, doses=%d, vaccine_name=%s\n", batch, expiry_date, doses, vaccine_name); // Debugging statement
                 add_vaccine_batch(batch, expiry_date, doses, vaccine_name);
                 break;
             }
             case 'l': {
                 char vaccine_name[MAX_VACCINE_NAME];
                 if (scanf("%s", vaccine_name) == 1) {
+                    printf("Command 'l' received with vaccine_name=%s\n", vaccine_name); // Debugging statement
                     list_vaccine_batches(vaccine_name);
                 } else {
+                    printf("Command 'l' received with no args\n"); // Debugging statement
                     list_vaccine_batches(NULL);
                 }
                 break;
@@ -206,18 +209,21 @@ int main() {
             case 'a': {
                 char user_name[MAX_USER_NAME], vaccine_name[MAX_VACCINE_NAME];
                 scanf("%s %s", user_name, vaccine_name);
+                printf("Command 'a' received with args: user_name=%s, vaccine_name=%s\n", user_name, vaccine_name); // Debugging statement
                 apply_vaccine(user_name, vaccine_name);
                 break;
             }
             case 'r': {
                 char batch[MAX_BATCH_NAME];
                 scanf("%s", batch);
+                printf("Command 'r' received with batch=%s\n", batch); // Debugging statement
                 remove_vaccine_batch(batch);
                 break;
             }
             case 'd': {
                 char user_name[MAX_USER_NAME], date[MAX_DATE], batch[MAX_BATCH_NAME];
                 int args = scanf("%s %s %s", user_name, date, batch);
+                printf("Command 'd' received with args: user_name=%s, date=%s, batch=%s\n", user_name, date, batch); // Debugging statement
                 if (args == 1) {
                     delete_inoculation(user_name, NULL, NULL);
                 } else if (args == 2) {
@@ -230,8 +236,10 @@ int main() {
             case 'u': {
                 char user_name[MAX_USER_NAME];
                 if (scanf("%s", user_name) == 1) {
+                    printf("Command 'u' received with user_name=%s\n", user_name); // Debugging statement
                     list_inoculations(user_name);
                 } else {
+                    printf("Command 'u' received with no args\n"); // Debugging statement
                     list_inoculations(NULL);
                 }
                 break;
@@ -239,8 +247,10 @@ int main() {
             case 't': {
                 char new_date[MAX_DATE];
                 if (scanf("%s", new_date) == 1) {
+                    printf("Command 't' received with new_date=%s\n", new_date); // Debugging statement
                     advance_time(new_date);
                 } else {
+                    printf("Command 't' received with no args\n"); // Debugging statement
                     advance_time(NULL);
                 }
                 break;
