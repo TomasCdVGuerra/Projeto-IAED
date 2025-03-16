@@ -1,4 +1,9 @@
+Command 'c' received with args: batch=CA12B5, expiry_date=04-08-2025, doses=120, vaccine_name=sarampo
 CA12B5
+Command 'a' received with args: user_name=xico, vaccine_name=sarampo
 CA12B5
+Command 'a' received with args: user_name=joão, vaccine_name=sarampo
 CA12B5
+Command 'u' received with user_name=xico
 xico CA12B5 01-01-2025 sarampo
+Command 'l' received with vaccine_name=q

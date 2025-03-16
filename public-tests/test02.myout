@@ -1,8 +1,16 @@
+Command 't' received with new_date=01-12-2023
 invalid date
+Command 't' received with new_date=31-12-2024
 invalid date
+Command 't' received with new_date=01-01-2025
 01-01-2025
+Command 't' received with new_date=02-01-2025
 02-01-2025
+Command 't' received with new_date=01-01-2025
 invalid date
+Command 't' received with new_date=32-07-2025
 invalid date
+Command 't' received with new_date=13-12-2025
 13-12-2025
+Command 't' received with new_date=30-12-2025
 30-12-2025

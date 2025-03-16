@@ -1,5 +1,14 @@
-4c4,6
+1d0
+< Command 'c' received with args: batch=CA12B5, expiry_date=04-08-2025, doses=120, vaccine_name=sarampo
+3d1
+< Command 'a' received with args: user_name=xico, vaccine_name=sarampo
+5d2
+< Command 'a' received with args: user_name=joão, vaccine_name=sarampo
+7,10c4,6
+< Command 'u' received with user_name=xico
 < xico CA12B5 01-01-2025 sarampo
+< Command 'u' received with user_name=maria
+< Command 'l' received with vaccine_name=q
 ---
 > xico CA12B5 01-01-2025
 > maria: no such user

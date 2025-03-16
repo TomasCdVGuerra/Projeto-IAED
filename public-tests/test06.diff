@@ -1,4 +1,7 @@
-2c2
+1d0
+< Command 't' received with new_date=01-08-2025
+3,4c2
+< Command 'c' received with args: batch=A0C0, expiry_date=31-07-2025, doses=210, vaccine_name=papeira
 < invalid input
 ---
 > invalid date

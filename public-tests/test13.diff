@@ -1,9 +1,18 @@
-2a3
+1d0
+< Command 'c' received with args: batch=CA12B5, expiry_date=04-08-2025, doses=120, vaccine_name=sarampo
+3d1
+< Command 'a' received with args: user_name=joão, vaccine_name=sarampo
+5c3
+< Command 'a' received with args: user_name="João, vaccine_name=Miguel"
+---
 > CA12B5
-4,7c5
+7,13c5
 < invalid command
+< Command 'a' received with args: user_name=rampo, vaccine_name=a
 < no stock
 < invalid command
+< Command 'a' received with args: user_name=ria, vaccine_name=sarampos
 < no stock
+< Command 'l' received with vaccine_name=q
 ---
 > sarampo CA12B5 04-08-2025 118 2
