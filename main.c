@@ -49,7 +49,7 @@ int is_valid_batch_name(const char *batch) {
 int is_valid_vaccine_name(const char *name) {
     if (strlen(name) > MAX_VACCINE_NAME) return 0;
     for (int i = 0; name[i] != '\0'; i++) {
-        if (!isalnum(name[i]) && name[i] != '_') return 0;
+        if (!isalnum(name[i]) && name[i] != '_' && name[i] != '-') return 0;
     }
     return 1;
 }
