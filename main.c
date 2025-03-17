@@ -2,27 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-
-#define MAX_VACCINES 1000
-#define MAX_VACCINE_NAME 50
-#define MAX_BATCH_NAME 10
-#define MAX_DATE 11
-#define MAX_USER_NAME 100
-
-typedef struct {
-    char batch[MAX_BATCH_NAME];
-    char expiry_date[MAX_DATE];
-    int doses;
-    char vaccine_name[MAX_VACCINE_NAME];
-    int applications;
-} VaccineBatch;
-
-typedef struct {
-    char user_name[MAX_USER_NAME];
-    char vaccine_name[MAX_VACCINE_NAME];
-    char batch[MAX_BATCH_NAME];
-    char application_date[MAX_DATE];
-} Inoculation;
+#include "vaccineManagement.h"
 
 VaccineBatch vaccine_batches[MAX_VACCINES];
 Inoculation inoculations[MAX_VACCINES * MAX_VACCINES];
