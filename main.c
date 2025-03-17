@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <ctype.h>
+#include <string.h>
 #include "vaccineManagement.h"
 
 VaccineBatch vaccine_batches[MAX_VACCINES];
@@ -123,7 +123,9 @@ void list_vaccine_batches(char *vaccine_names[], int vaccine_names_count) {
 
     // Print the sorted vaccine batches
     for (int i = 0; i < filtered_count; i++) {
-        printf("%s %s %s %d %d\n", filtered_batches[i].vaccine_name, filtered_batches[i].batch, filtered_batches[i].expiry_date, filtered_batches[i].doses, filtered_batches[i].applications);
+        int day, month, year;
+        parse_date(filtered_batches[i].expiry_date, &day, &month, &year);
+        printf("%s %s %02d-%02d-%d %d %d\n", filtered_batches[i].vaccine_name, filtered_batches[i].batch, day, month, year, filtered_batches[i].doses, filtered_batches[i].applications);
     }
 
     // Print error message for non-existing vaccines
@@ -206,19 +208,24 @@ void delete_inoculation(char *user_name, char *date, char *batch) {
 void list_inoculations(char *user_name) {
     for (int i = 0; i < inoculation_count; i++) {
         if (user_name == NULL || strcmp(inoculations[i].user_name, user_name) == 0) {
-            printf("%s %s %s %s\n", inoculations[i].user_name, inoculations[i].batch, inoculations[i].application_date, inoculations[i].vaccine_name);
-        }
+            int day, month, year;
+            parse_date(inoculations[i].application_date, &day, &month, &year);
+            printf("%s %s %02d-%02d-%d %s\n", inoculations[i].user_name, inoculations[i].batch, day, month, year, inoculations[i].vaccine_name);        }
     }
 }
 
 void advance_time(char *new_date) {
     if (new_date == NULL) {
-        printf("%s\n", current_date);
+        int day, month, year;
+        parse_date(current_date, &day, &month, &year);
+        printf("%02d-%02d-%d\n", day, month, year);
         return;
     }
     if (is_valid_date(new_date)) {
         strcpy(current_date, new_date);
-        printf("%s\n", current_date);
+        int day, month, year;
+        parse_date(current_date, &day, &month, &year);
+        printf("%02d-%02d-%d\n", day, month, year);
     } else {
         printf("invalid date\n");
     }
@@ -238,7 +245,7 @@ int main() {
                 break;
             }
             case 'l': {
-                char line[1024];
+                char line[MAX_VACCINE_NAME];
                 char *vaccine_names[MAX_VACCINES];
                 int vaccine_names_count = 0;
             
