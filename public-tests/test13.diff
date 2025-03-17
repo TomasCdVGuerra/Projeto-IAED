@@ -4,11 +4,10 @@
 > CA12B5
 > CA12B5
 > CA12B5
-3,7c5
+3,6c5
 < no stock
-< invalid command
 < no stock
-< invalid command
 < no stock
+< q: no such vaccine
 ---
 > sarampo CA12B5 04-08-2025 118 2

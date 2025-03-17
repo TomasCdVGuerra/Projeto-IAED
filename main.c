@@ -110,10 +110,39 @@ void add_vaccine_batch(char *batch, char *expiry_date, int doses, char *vaccine_
     printf("%s\n", batch);
 }
 
-void list_vaccine_batches(char *vaccine_name) {
+void list_vaccine_batches(char *vaccine_names[], int vaccine_names_count) {
+    int found_vaccine[MAX_VACCINES] = {0};
+    VaccineBatch sorted_batches[MAX_VACCINES];
+    int sorted_count = 0;
+
+    // Filter and sort the vaccine batches
     for (int i = 0; i < vaccine_count; i++) {
-        if (vaccine_name == NULL || strcmp(vaccine_batches[i].vaccine_name, vaccine_name) == 0) {
-            printf("%s %s %s %d %d\n", vaccine_batches[i].vaccine_name, vaccine_batches[i].batch, vaccine_batches[i].expiry_date, vaccine_batches[i].doses, vaccine_batches[i].applications);
+        if (vaccine_names_count == 0 || (vaccine_names_count > 0 && strcmp(vaccine_batches[i].vaccine_name, vaccine_names[sorted_count]) == 0)) {
+            sorted_batches[sorted_count++] = vaccine_batches[i];
+        }
+    }
+
+    // Sort by expiry date and batch name
+    for (int i = 0; i < sorted_count - 1; i++) {
+        for (int j = i + 1; j < sorted_count; j++) {
+            if (compare_dates(sorted_batches[i].expiry_date, sorted_batches[j].expiry_date) > 0 ||
+                (compare_dates(sorted_batches[i].expiry_date, sorted_batches[j].expiry_date) == 0 && strcmp(sorted_batches[i].batch, sorted_batches[j].batch) > 0)) {
+                VaccineBatch temp = sorted_batches[i];
+                sorted_batches[i] = sorted_batches[j];
+                sorted_batches[j] = temp;
+            }
+        }
+    }
+
+    // Print the sorted vaccine batches
+    for (int i = 0; i < sorted_count; i++) {
+        printf("%s %s %s %d %d\n", sorted_batches[i].vaccine_name, sorted_batches[i].batch, sorted_batches[i].expiry_date, sorted_batches[i].doses, sorted_batches[i].applications);
+    }
+
+    // Print error message for non-existing vaccines
+    for (int i = 0; i < vaccine_names_count; i++) {
+        if (!found_vaccine[i]) {
+            printf("%s: no such vaccine\n", vaccine_names[i]);
         }
     }
 }
@@ -216,10 +245,15 @@ int main() {
             }
             case 'l': {
                 char vaccine_name[MAX_VACCINE_NAME];
-                if (scanf("%s", vaccine_name) == 1) {
-                    list_vaccine_batches(vaccine_name);
-                } else {
-                    list_vaccine_batches(NULL);
+                char *vaccine_names[MAX_VACCINES];
+                int vaccine_names_count = 0;
+                while (scanf("%s", vaccine_name) == 1) {
+                    vaccine_names[vaccine_names_count] = strdup(vaccine_name);
+                    vaccine_names_count++;
+                }
+                list_vaccine_batches(vaccine_names, vaccine_names_count);
+                for (int i = 0; i < vaccine_names_count; i++) {
+                    free(vaccine_names[i]);
                 }
                 break;
             }
@@ -266,7 +300,7 @@ int main() {
                 break;
             }
             default:
-                printf("invalid command\n");
+                // Ignore unrecognized commands
                 break;
         }
     }
