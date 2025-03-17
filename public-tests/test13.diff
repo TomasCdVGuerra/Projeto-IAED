@@ -1,13 +1,8 @@
-1c1,3
-< invalid batch
----
+2a3
 > CA12B5
-> CA12B5
-> CA12B5
-3,6c5
+4,6c5
 < no stock
 < no stock
-< no stock
-< q: no such vaccine
+< sarampo CA12B5 04-08-2025 119 1
 ---
 > sarampo CA12B5 04-08-2025 118 2

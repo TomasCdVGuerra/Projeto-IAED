@@ -1,11 +1,4 @@
-1,4c1,5
-< invalid batch
-< invalid batch
-< no stock
-< q: no such vaccine
+4c4
+< sarampo F5A4 04-5-2025 19 1
 ---
-> CA12B5
-> F5A4
-> F5A4
 > sarampo F5A4 04-05-2025 19 1
-> sarampo CA12B5 04-08-2025 120 0

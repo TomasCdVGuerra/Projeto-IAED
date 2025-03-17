@@ -41,7 +41,7 @@ int is_valid_date(const char *date) {
 int is_valid_batch_name(const char *batch) {
     if (strlen(batch) > MAX_BATCH_NAME) return 0;
     for (int i = 0; batch[i] != '\0'; i++) {
-        if (!isxdigit(batch[i]) || !isupper(batch[i])) return 0;
+        if (!isxdigit(batch[i]) || (isalpha(batch[i]) && !isupper(batch[i]))) return 0;
     }
     return 1;
 }
@@ -238,14 +238,22 @@ int main() {
                 break;
             }
             case 'l': {
-                char vaccine_name[MAX_VACCINE_NAME];
+                char line[1024];
                 char *vaccine_names[MAX_VACCINES];
                 int vaccine_names_count = 0;
-                while (scanf("%s", vaccine_name) == 1) {
-                    vaccine_names[vaccine_names_count] = strdup(vaccine_name);
-                    vaccine_names_count++;
+            
+                // Read the entire line of input
+                if (fgets(line, sizeof(line), stdin) != NULL) {
+                    char *token = strtok(line, " \n");
+                    while (token != NULL) {
+                        vaccine_names[vaccine_names_count] = strdup(token);
+                        vaccine_names_count++;
+                        token = strtok(NULL, " \n");
+                    }
                 }
+            
                 list_vaccine_batches(vaccine_names, vaccine_names_count);
+            
                 for (int i = 0; i < vaccine_names_count; i++) {
                     free(vaccine_names[i]);
                 }
