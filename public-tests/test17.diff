@@ -1,8 +1,12 @@
-3,5c3,7
+1,5c1,7
+< invalid batch
+< no stock
 < invalid command
 < invalid command
-< invalid date
+< invalid batch
 ---
+> CA12B5
+> CA12B5
 > joão CA12B5 01-01-2025
 > CA12B5
 > joão CA12B5 01-01-2025

@@ -1,7 +1,19 @@
-8,9c8,12
-< xico CA12B5 01-01-2025 sarampo
-< xico A0C0 01-01-2025 papeira
+1,7c1,12
+< invalid batch
+< invalid batch
+< invalid batch
+< no stock
+< no stock
+< no stock
+< no stock
 ---
+> CA12B5
+> 5A8B
+> A0C0
+> CA12B5
+> A0C0
+> 5A8B
+> already vaccinated
 > xico CA12B5 01-01-2025
 > xico A0C0 01-01-2025
 > papeira A0C0 31-07-2025 209 1

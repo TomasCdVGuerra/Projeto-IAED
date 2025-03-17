@@ -61,7 +61,15 @@ int is_valid_date(const char *date) {
 int is_valid_batch_name(const char *batch) {
     if (strlen(batch) > MAX_BATCH_NAME) return 0;
     for (int i = 0; batch[i] != '\0'; i++) {
-        if (!isalnum(batch[i])) return 0;
+        if (!isxdigit(batch[i]) || !isupper(batch[i])) return 0;
+    }
+    return 1;
+}
+
+int is_valid_vaccine_name(const char *name) {
+    if (strlen(name) > MAX_VACCINE_NAME) return 0;
+    for (int i = 0; name[i] != '\0'; i++) {
+        if (!isalnum(name[i]) && name[i] != '_') return 0;
     }
     return 1;
 }
@@ -78,15 +86,19 @@ void add_vaccine_batch(char *batch, char *expiry_date, int doses, char *vaccine_
         }
     }
     if (!is_valid_batch_name(batch)) {
-        printf("invalid input\n");
+        printf("invalid batch\n");
         return;
     }
-    else if(!is_valid_date(expiry_date)){
+    if (!is_valid_date(expiry_date)) {
         printf("invalid date\n");
         return;
     }
-    else if(doses <= 0){
+    if (doses <= 0) {
         printf("invalid quantity\n");
+        return;
+    }
+    if (!is_valid_vaccine_name(vaccine_name)) {
+        printf("invalid name\n");
         return;
     }
     strcpy(vaccine_batches[vaccine_count].batch, batch);

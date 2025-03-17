@@ -1,6 +1,11 @@
-2a3
+1c1,3
+< invalid batch
+---
 > CA12B5
-4,7c5
+> CA12B5
+> CA12B5
+3,7c5
+< no stock
 < invalid command
 < no stock
 < invalid command
