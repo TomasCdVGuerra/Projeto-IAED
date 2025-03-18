@@ -105,40 +105,46 @@ void list_vaccine_batches(char *vaccine_names[], int vaccine_names_count) {
     int filtered_count = 0;
 
     // Filter the vaccine batches based on the provided names or take all if no name is provided
-    for (int i = 0; i < vaccine_count; i++) {
-        if (vaccine_names_count == 0) {
+    if (vaccine_names_count == 0) {
+        for (int i = 0; i < vaccine_count; i++) {
             filtered_batches[filtered_count++] = vaccine_batches[i];
-        } else {
-            for (int j = 0; j < vaccine_names_count; j++) {
+        }
+
+        // Sort the filtered batches
+        qsort(filtered_batches, filtered_count, sizeof(VaccineBatch), compare_batches);
+
+        // Print the sorted vaccine batches
+        for (int i = 0; i < filtered_count; i++) {
+            int day, month, year;
+            parse_date(filtered_batches[i].expiry_date, &day, &month, &year);
+            printf("%s %s %02d-%02d-%d %d %d\n", filtered_batches[i].vaccine_name, filtered_batches[i].batch, day, month, year, filtered_batches[i].doses, filtered_batches[i].applications);
+        }
+    } else {
+        for (int j = 0; j < vaccine_names_count; j++) {
+            int found = 0;
+            for (int i = 0; i < vaccine_count; i++) {
                 if (strcmp(vaccine_batches[i].vaccine_name, vaccine_names[j]) == 0) {
                     filtered_batches[filtered_count++] = vaccine_batches[i];
-                    break;
+                    found = 1;
                 }
             }
-        }
-    }
-
-    // Sort the filtered batches
-    qsort(filtered_batches, filtered_count, sizeof(VaccineBatch), compare_batches);
-
-    // Print the sorted vaccine batches
-    for (int i = 0; i < filtered_count; i++) {
-        int day, month, year;
-        parse_date(filtered_batches[i].expiry_date, &day, &month, &year);
-        printf("%s %s %02d-%02d-%d %d %d\n", filtered_batches[i].vaccine_name, filtered_batches[i].batch, day, month, year, filtered_batches[i].doses, filtered_batches[i].applications);
-    }
-
-    // Print error message for non-existing vaccines
-    for (int i = 0; i < vaccine_names_count; i++) {
-        int found = 0;
-        for (int j = 0; j < filtered_count; j++) {
-            if (strcmp(vaccine_names[i], filtered_batches[j].vaccine_name) == 0) {
-                found = 1;
-                break;
+            if (!found) {
+                printf("%s: no such vaccine\n", vaccine_names[j]);
             }
         }
-        if (!found) {
-            printf("%s: no such vaccine\n", vaccine_names[i]);
+
+        // Sort the filtered batches
+        qsort(filtered_batches, filtered_count, sizeof(VaccineBatch), compare_batches);
+
+        // Print the sorted vaccine batches in the order of the provided names
+        for (int j = 0; j < vaccine_names_count; j++) {
+            for (int i = 0; i < filtered_count; i++) {
+                if (strcmp(filtered_batches[i].vaccine_name, vaccine_names[j]) == 0) {
+                    int day, month, year;
+                    parse_date(filtered_batches[i].expiry_date, &day, &month, &year);
+                    printf("%s %s %02d-%02d-%d %d %d\n", filtered_batches[i].vaccine_name, filtered_batches[i].batch, day, month, year, filtered_batches[i].doses, filtered_batches[i].applications);
+                }
+            }
         }
     }
 }
