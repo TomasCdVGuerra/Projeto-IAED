@@ -161,30 +161,47 @@ void list_vaccine_batches(char *vaccine_names[], int vaccine_names_count) {
 
 void apply_vaccine(char *user_name, char *vaccine_name) {
     int index = -1;
+    
+    // First find the best batch to use (earliest expiring with available doses)
     for (int i = 0; i < vaccine_count; i++) {
-        if (strcmp(vaccine_batches[i].vaccine_name, vaccine_name) == 0 && vaccine_batches[i].doses > 0 && compare_dates(vaccine_batches[i].expiry_date, current_date) >= 0) {
+        if (strcmp(vaccine_batches[i].vaccine_name, vaccine_name) == 0 && 
+            vaccine_batches[i].doses > 0 && 
+            compare_dates(vaccine_batches[i].expiry_date, current_date) >= 0) {
+            
             if (index == -1 || compare_dates(vaccine_batches[i].expiry_date, vaccine_batches[index].expiry_date) < 0) {
                 index = i;
             }
         }
     }
+    
+    // If no valid batch found
     if (index == -1) {
         printf("no stock\n");
         return;
     }
+    
+    // Check if this person has already been vaccinated with this vaccine today
     for (int i = 0; i < inoculation_count; i++) {
-        if (strcmp(inoculations[i].user_name, user_name) == 0 && strcmp(inoculations[i].vaccine_name, vaccine_name) == 0 && strcmp(inoculations[i].application_date, current_date) == 0) {
+        if (strcmp(inoculations[i].user_name, user_name) == 0 && 
+            strcmp(inoculations[i].vaccine_name, vaccine_name) == 0 && 
+            strcmp(inoculations[i].application_date, current_date) == 0) {
+            
             printf("already vaccinated\n");
             return;
         }
     }
+    
+    // Record the vaccination
     strcpy(inoculations[inoculation_count].user_name, user_name);
     strcpy(inoculations[inoculation_count].vaccine_name, vaccine_name);
     strcpy(inoculations[inoculation_count].batch, vaccine_batches[index].batch);
     strcpy(inoculations[inoculation_count].application_date, current_date);
     inoculation_count++;
+    
+    // Update the vaccine batch
     vaccine_batches[index].doses--;
     vaccine_batches[index].applications++;
+    
     printf("%s\n", vaccine_batches[index].batch);
 }
 
@@ -226,7 +243,7 @@ void list_inoculations(char *user_name) {
         if (user_name == NULL || strcmp(inoculations[i].user_name, user_name) == 0) {
             int day, month, year;
             parse_date(inoculations[i].application_date, &day, &month, &year);
-            printf("%s %s %02d-%02d-%d %s\n", inoculations[i].user_name, inoculations[i].batch, day, month, year, inoculations[i].vaccine_name);        }
+            printf("%s %s %02d-%02d-%d\n", inoculations[i].user_name, inoculations[i].batch, day, month, year);        }
     }
 }
 
@@ -284,8 +301,45 @@ int main() {
             }
             case 'a': {
                 char user_name[MAX_USER_NAME], vaccine_name[MAX_VACCINE_NAME];
-                scanf("%s %s", user_name, vaccine_name);
-                apply_vaccine(user_name, vaccine_name);
+                char line[MAX_USER_NAME + MAX_VACCINE_NAME + 10]; // Buffer for the entire line
+                
+                if (fgets(line, sizeof(line), stdin) != NULL) {
+                    // Skip initial spaces
+                    char *start = line;
+                    while (*start == ' ' || *start == '\t') start++;
+                    
+                    // Remove trailing newline
+                    char *newline = strchr(start, '\n');
+                    if (newline) *newline = '\0';
+                    
+                    // Check if username is quoted
+                    if (*start == '"') {
+                        // Username enclosed in quotes
+                        start++; // Skip opening quote
+                        char *end_quote = strchr(start, '"');
+                        if (end_quote) {
+                            *end_quote = '\0'; // Replace closing quote with null terminator
+                            strcpy(user_name, start); // Copy quoted username
+                            
+                            // Move to after the closing quote
+                            char *after_quote = end_quote + 1;
+                            while (*after_quote == ' ' || *after_quote == '\t') after_quote++;
+                            
+                            // The rest is the vaccine name
+                            strcpy(vaccine_name, after_quote);
+                            apply_vaccine(user_name, vaccine_name);
+                        }
+                    } else {
+                        // No quotes, extract user name and vaccine name by finding the last space
+                        char *last_space = strrchr(start, ' ');
+                        if (last_space != NULL) {
+                            strncpy(user_name, start, last_space - start);
+                            user_name[last_space - start] = '\0';
+                            strcpy(vaccine_name, last_space + 1);
+                            apply_vaccine(user_name, vaccine_name);
+                        }
+                    }
+                }
                 break;
             }
             case 'r': {
@@ -295,23 +349,99 @@ int main() {
                 break;
             }
             case 'd': {
-                char user_name[MAX_USER_NAME], date[MAX_DATE], batch[MAX_BATCH_NAME];
-                int args = scanf("%s %s %s", user_name, date, batch);
-                if (args == 1) {
-                    delete_inoculation(user_name, NULL, NULL);
-                } else if (args == 2) {
-                    delete_inoculation(user_name, date, NULL);
-                } else {
-                    delete_inoculation(user_name, date, batch);
+                char line[MAX_USER_NAME + MAX_DATE + MAX_BATCH_NAME + 10]; // Buffer for the entire line
+                
+                // Read the entire line
+                if (fgets(line, sizeof(line), stdin) != NULL) {
+                    // Skip initial spaces
+                    char *start = line;
+                    while (*start == ' ' || *start == '\t') start++;
+                    
+                    // Remove trailing newline
+                    char *newline = strchr(start, '\n');
+                    if (newline) *newline = '\0';
+                    
+                    char *current = start;
+                    char *args[3] = {NULL, NULL, NULL};
+                    int arg_count = 0;
+                    
+                    // Parse arguments, handling quoted usernames
+                    if (*current == '"') {
+                        // Username enclosed in quotes
+                        current++; // Skip opening quote
+                        char *end_quote = strchr(current, '"');
+                        if (end_quote) {
+                            *end_quote = '\0'; // Replace closing quote with null terminator
+                            args[arg_count++] = current; // Store username
+                            current = end_quote + 1;
+                            
+                            // Skip spaces after the quoted username
+                            while (*current == ' ' || *current == '\t') current++;
+                            
+                            // Parse remaining arguments
+                            char *token = strtok(current, " \t");
+                            while (token != NULL && arg_count < 3) {
+                                args[arg_count++] = token;
+                                token = strtok(NULL, " \t");
+                            }
+                        }
+                    } else {
+                        // No quotes, just parse space-separated arguments
+                        char *token = strtok(current, " \t");
+                        while (token != NULL && arg_count < 3) {
+                            args[arg_count++] = token;
+                            token = strtok(NULL, " \t");
+                        }
+                    }
+                    
+                    // Call delete_inoculation with the parsed arguments
+                    if (arg_count == 1) {
+                        delete_inoculation(args[0], NULL, NULL);
+                    } else if (arg_count == 2) {
+                        delete_inoculation(args[0], args[1], NULL);
+                    } else if (arg_count == 3) {
+                        delete_inoculation(args[0], args[1], args[2]);
+                    }
                 }
                 break;
             }
+            
             case 'u': {
                 char user_name[MAX_USER_NAME];
-                if (scanf("%s", user_name) == 1) {
-                    list_inoculations(user_name);
-                } else {
-                    list_inoculations(NULL);
+                char line[MAX_USER_NAME + 10]; // Buffer for the entire line
+                
+                // Read the entire line
+                if (fgets(line, sizeof(line), stdin) != NULL) {
+                    // Skip initial spaces
+                    char *start = line;
+                    while (*start == ' ' || *start == '\t') start++;
+                    
+                    // Remove trailing newline
+                    char *newline = strchr(start, '\n');
+                    if (newline) *newline = '\0';
+                    
+                    // If line is empty after skipping spaces
+                    if (*start == '\0') {
+                        list_inoculations(NULL);
+                    } 
+                    // If username is quoted
+                    else if (*start == '"') {
+                        start++; // Skip opening quote
+                        char *end_quote = strchr(start, '"');
+                        if (end_quote) {
+                            *end_quote = '\0'; // Replace closing quote with null terminator
+                            strcpy(user_name, start);
+                            list_inoculations(user_name);
+                        }
+                    } 
+                    // Simple username without spaces
+                    else {
+                        // Get first word only
+                        char *space = strchr(start, ' ');
+                        if (space) *space = '\0';
+                        strcpy(user_name, start);
+                        list_inoculations(user_name);
+                    }
                 }
                 break;
             }

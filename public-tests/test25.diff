@@ -1,6 +1,11 @@
-0a1,202
-> CA12B5
-> sarampo CA12B5 04-08-2025 100 0
+3,8c3,202
+< invalid batch
+< S82PoBVIml4beZJzoQ99: no such vaccine
+< y": no such vaccine
+< sarampo CA12B5 04-08-2025 100 0
+< invalid date
+< 0 inoculations deleted
+---
 > CA12B5
 > CA12B5
 > CA12B5
