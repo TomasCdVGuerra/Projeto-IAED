@@ -239,11 +239,30 @@ void delete_inoculation(char *user_name, char *date, char *batch) {
 }
 
 void list_inoculations(char *user_name) {
-    for (int i = 0; i < inoculation_count; i++) {
-        if (user_name == NULL || strcmp(inoculations[i].user_name, user_name) == 0) {
+    // If no specific user is requested, list all inoculations
+    if (user_name == NULL) {
+        for (int i = 0; i < inoculation_count; i++) {
             int day, month, year;
             parse_date(inoculations[i].application_date, &day, &month, &year);
-            printf("%s %s %02d-%02d-%d\n", inoculations[i].user_name, inoculations[i].batch, day, month, year);        }
+            printf("%s %s %02d-%02d-%d\n", inoculations[i].user_name, inoculations[i].batch, day, month, year);
+        }
+        return;
+    }
+    
+    // Check if the user exists and list their inoculations
+    int user_found = 0;
+    for (int i = 0; i < inoculation_count; i++) {
+        if (strcmp(inoculations[i].user_name, user_name) == 0) {
+            int day, month, year;
+            parse_date(inoculations[i].application_date, &day, &month, &year);
+            printf("%s %s %02d-%02d-%d\n", inoculations[i].user_name, inoculations[i].batch, day, month, year);
+            user_found = 1;
+        }
+    }
+    
+    // If the user doesn't exist, display the appropriate message
+    if (!user_found && user_name != NULL) {
+        printf("%s: no such user\n", user_name);
     }
 }
 
