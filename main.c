@@ -160,12 +160,6 @@ void list_vaccine_batches(char *vaccine_names[], int vaccine_names_count) {
 }
 
 void apply_vaccine(char *user_name, char *vaccine_name) {
-    // Check username and vaccine name lengths
-    if (strlen(user_name) >= MAX_USER_NAME) {
-        printf("invalid batch\n");  // This error message is what your test expects
-        return;
-    }
-    
     // Validate vaccine name
     if (!is_valid_vaccine_name(vaccine_name)) {
         printf("invalid name\n");
@@ -203,8 +197,13 @@ void apply_vaccine(char *user_name, char *vaccine_name) {
         }
     }
     
-    // Record the vaccination
-    strcpy(inoculations[inoculation_count].user_name, user_name);
+    // Record the vaccination - dynamically allocate memory for the user name
+    inoculations[inoculation_count].user_name = strdup(user_name);
+    if (inoculations[inoculation_count].user_name == NULL) {
+        printf("memory allocation error\n");
+        return;
+    }
+    
     strcpy(inoculations[inoculation_count].vaccine_name, vaccine_name);
     strcpy(inoculations[inoculation_count].batch, vaccine_batches[index].batch);
     strcpy(inoculations[inoculation_count].application_date, current_date);
@@ -238,7 +237,13 @@ void remove_vaccine_batch(char *batch) {
 void delete_inoculation(char *user_name, char *date, char *batch) {
     int deleted_inoculations = 0;
     for (int i = 0; i < inoculation_count; i++) {
-        if (strcmp(inoculations[i].user_name, user_name) == 0 && (date == NULL || strcmp(inoculations[i].application_date, date) == 0) && (batch == NULL || strcmp(inoculations[i].batch, batch) == 0)) {
+        if (strcmp(inoculations[i].user_name, user_name) == 0 && 
+            (date == NULL || strcmp(inoculations[i].application_date, date) == 0) && 
+            (batch == NULL || strcmp(inoculations[i].batch, batch) == 0)) {
+            
+            // Free dynamically allocated memory
+            free(inoculations[i].user_name);
+            
             for (int j = i; j < inoculation_count - 1; j++) {
                 inoculations[j] = inoculations[j + 1];
             }
@@ -300,23 +305,29 @@ int main() {
     while (scanf(" %c", &command) != EOF) {
         switch (command) {
             case 'q':
-                return 0;
-                case 'c': {
-                    char batch[MAX_BATCH_NAME], expiry_date[MAX_DATE], vaccine_name[MAX_VACCINE_NAME];
-                    int doses;
-                    int scan_result = scanf("%s %s %d %s", batch, expiry_date, &doses, vaccine_name);
-                    
-                    // Check if we correctly read all 4 parameters
-                    if (scan_result == 4) {
-                        add_vaccine_batch(batch, expiry_date, doses, vaccine_name);
-                    } else {
-                        // Clear the input buffer
-                        char c;
-                        while ((c = getchar()) != '\n' && c != EOF);
-                        printf("invalid batch\n");
-                    }
-                    break;
+                // Free allocated memory before exiting
+                for (int i = 0; i < inoculation_count; i++) {
+                    free(inoculations[i].user_name);
                 }
+                return 0;
+            
+            case 'c': {
+                char batch[MAX_BATCH_NAME], expiry_date[MAX_DATE], vaccine_name[MAX_VACCINE_NAME];
+                int doses;
+                int scan_result = scanf("%s %s %d %s", batch, expiry_date, &doses, vaccine_name);
+                
+                // Check if we correctly read all 4 parameters
+                if (scan_result == 4) {
+                    add_vaccine_batch(batch, expiry_date, doses, vaccine_name);
+                } else {
+                    // Clear the input buffer
+                    char c;
+                    while ((c = getchar()) != '\n' && c != EOF);
+                    printf("invalid batch\n");
+                }
+                break;
+            }
+            
             case 'l': {
                 char line[MAX_VACCINE_NAME];
                 char *vaccine_names[MAX_VACCINES];
@@ -339,8 +350,9 @@ int main() {
                 }
                 break;
             }
+            
             case 'a': {
-                char user_name[MAX_USER_NAME], vaccine_name[MAX_VACCINE_NAME];
+                char user_name[MAX_USER_NAME] = {0}, vaccine_name[MAX_VACCINE_NAME] = {0};
                 char line[MAX_USER_NAME + MAX_VACCINE_NAME + 10]; // Buffer for the entire line
                 
                 if (fgets(line, sizeof(line), stdin) != NULL) {
@@ -357,7 +369,7 @@ int main() {
                         // Username enclosed in quotes
                         start++; // Skip opening quote
                         char *end_quote = strchr(start, '"');
-                        if (end_quote) {
+                        if (end_quote && end_quote - start < MAX_USER_NAME) {
                             *end_quote = '\0'; // Replace closing quote with null terminator
                             strcpy(user_name, start); // Copy quoted username
                             
@@ -368,26 +380,32 @@ int main() {
                             // The rest is the vaccine name
                             strcpy(vaccine_name, after_quote);
                             apply_vaccine(user_name, vaccine_name);
+                        } else {
+                            printf("invalid batch\n");
                         }
                     } else {
                         // No quotes, extract user name and vaccine name by finding the last space
                         char *last_space = strrchr(start, ' ');
-                        if (last_space != NULL) {
+                        if (last_space != NULL && last_space - start < MAX_USER_NAME) {
                             strncpy(user_name, start, last_space - start);
                             user_name[last_space - start] = '\0';
                             strcpy(vaccine_name, last_space + 1);
                             apply_vaccine(user_name, vaccine_name);
+                        } else {
+                            printf("invalid batch\n");
                         }
                     }
                 }
                 break;
             }
+            
             case 'r': {
                 char batch[MAX_BATCH_NAME];
                 scanf("%s", batch);
                 remove_vaccine_batch(batch);
                 break;
             }
+            
             case 'd': {
                 char line[MAX_USER_NAME + MAX_DATE + MAX_BATCH_NAME + 10]; // Buffer for the entire line
                 
@@ -485,6 +503,7 @@ int main() {
                 }
                 break;
             }
+            
             case 't': {
                 char new_date[MAX_DATE];
                 if (scanf("%s", new_date) == 1) {
@@ -494,6 +513,7 @@ int main() {
                 }
                 break;
             }
+            
             default:
                 // Ignore unrecognized commands
                 break;

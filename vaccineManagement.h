@@ -16,7 +16,7 @@ typedef struct {
 } VaccineBatch;
 
 typedef struct {
-    char user_name[MAX_USER_NAME];
+    char *user_name;  // Change to pointer for dynamic allocation
     char vaccine_name[MAX_VACCINE_NAME];
     char batch[MAX_BATCH_NAME];
     char application_date[MAX_DATE];
